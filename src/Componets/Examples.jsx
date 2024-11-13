@@ -1,6 +1,8 @@
 import TabButton from "./TabButton";
-import {EXAMPLES} from "./Data";
+import Section from "./Section";
 import {useState} from "react";
+import Tabs from "./Tabs";
+import { EXAMPLES } from './Data.js';
 
 export default function Examples(){
     const [selectedTopic, setSelectedTopic] =useState();
@@ -9,31 +11,40 @@ export default function Examples(){
 
         console.log(selectedTopic);
     }
+
+    let tabContent = <p>Please select a topic.</p>;
+
+    if (selectedTopic) {
+        tabContent = (
+            <div id="tab-content">
+                <h3>{EXAMPLES[selectedTopic].title}</h3>
+                <p>{EXAMPLES[selectedTopic].description}</p>
+                <pre>
+          <code>{EXAMPLES[selectedTopic].code}</code>
+        </pre>
+            </div>
+        );
+    }
     return (
-        <section id="examples">
+        <Section title = "Examples "id="examples">
             <h2>Examples</h2>
+            <Tabs
+                buttonsContainer= "menu"
+                buttons={   <> <TabButton isSelected={selectedTopic === "components"}
+                                         onClick={() => handleSelect("components")}>components</TabButton>
+                <TabButton isSelected={selectedTopic === "jsx"}
+                  onClick={() => handleSelect("jsx")}>jsx</TabButton>
+            <TabButton isSelected={selectedTopic === "props"}
+                       onClick={() => handleSelect("props")}>props</TabButton>
+            <TabButton isSelected={selectedTopic === "state"}
+                       onClick={() => handleSelect("state")}>state</TabButton>
+            </>}>
+                {tabContent}
+            </Tabs>
             <menu>
-                <TabButton isSelected={selectedTopic === "components"}
-                           onSelect={() => handleSelect("components")}>components</TabButton>
-                <TabButton isSelected={selectedTopic === "jsx"} onSelect={() => handleSelect("jsx")}>jsx</TabButton>
-                <TabButton isSelected={selectedTopic === "props"}
-                           onSelect={() => handleSelect("props")}>props</TabButton>
-                <TabButton isSelected={selectedTopic === "state"}
-                           onSelect={() => handleSelect("state")}>state</TabButton>
+
             </menu>
-            {!selectedTopic && <p>Please select a topic. </p>}
-            {selectedTopic && (<div id="tab-content">
 
-                    <h3>{EXAMPLES[selectedTopic].title}</h3>
-                    <p>{EXAMPLES[selectedTopic].description}</p>
-                    <pre>
-                          <code>
-                            {EXAMPLES[selectedTopic].code}
-                          </code>
-                      </pre>
-                </div>
-            )}
-
-        </section>
+        </Section>
     )
 }
